@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_CREDENTIALS = 'github-credentials-id'
+        AWS_CREDENTIALS = 'mahmouds-aws-credentials'
+        BUCKET_NAME = 'mahmouds-bucket'
+    }
+
+    stages {
+        stage('Clone Repo') {
+            steps {
+                git branch: 'main', credentialsId: env.GIT_CREDENTIALS, url: 'https://github.com/mahmoudmoe53/Jenkins_Project.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+                    . ~/.nvm/nvm.sh
+                    nvm install 16
+                    nvm use 16
+                    npm install
+                '''
+            }
+        }
+
+        stage('Run HTML Check') {
+            steps {
+                sh '''
+                    . ~/.nvm/nvm.sh
+                    npm run check
+                '''
+            }
+        }
+
+        stage('Deploy to S3') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AKIAZVHCKJRWQM74FHE6', credentialsId: env.AWS_CREDENTIALS, secretKeyVariable: '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']]) {
+                    sh 'aws s3 sync . s3://${mahmouds-bucket}/ --exclude "*" --include "*.html"'
+                }
+            }
+        }
+    }
+}
