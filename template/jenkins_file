@@ -37,8 +37,8 @@ pipeline {
 
         stage('Deploy to S3') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AKIAZVHCKJRWQM74FHE6', credentialsId: env.AWS_CREDENTIALS, secretKeyVariable: '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']]) {
-                    sh 'aws s3 sync . s3://${mahmouds-bucket}/ --exclude "*" --include "*.html"'
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: env.AWS_CREDENTIALS, secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    sh 'aws s3 sync . s3://${BUCKET_NAME}/ --exclude "*" --include "*.html"'
                 }
             }
         }
