@@ -3,12 +3,14 @@
     <title>
       Temporary Title
     </title>
-    async function handleClick() {
-      let response = await fetch("https://YOUR_LAMBDA_URL_HERE");
-      let text = await response.text();
-      document.getElementById("response").innerHTML = text;
-      document.getElementById("img").src = 'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9';
-    }
+    <script>
+      async function handleClick() {
+        let response = await fetch("https://YOUR_LAMBDA_URL_HERE");
+        let text = await response.text();
+        document.getElementById("response").innerHTML = text;
+        document.getElementById("img").src = 'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9';
+      }
+    </script>
   </head>
   <body>
     <div>
